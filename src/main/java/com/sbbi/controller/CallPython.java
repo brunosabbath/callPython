@@ -1,35 +1,45 @@
 package com.sbbi.controller;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class CallPython {
 
-	private final String PATH = "/home/bsilva/Desktop/sbbi/foodEngine/engine.py";
-	
-	public void call(){
+	private final String PATH = "/home/bsilva/Desktop/sbbi/foodEngine/";
+
+	public void call() {
+
+		String photoDir = "/home/bsilva/Desktop/sbbi/foodEngine/building.jpg";
+
+		long currentTimeMillis = System.currentTimeMillis();
+		System.out.println("current time: " + currentTimeMillis);
+		BufferedReader br = null;
+
+		//ProcessBuilder pb = new ProcessBuilder("python", PATH + "engine.py", photoDir, currentTimeMillis + "");
 		
-		String photo = "/home/bsilva/Desktop/sbbi/foodEngine/building.jpg";
-		
-		
-		//long currentTimeMillis = System.currentTimeMillis();
-		
-		 ProcessBuilder pb = new ProcessBuilder("python", PATH, photo);
-		 
-		 try {
-			Process p = pb.start();
+		try {
+			//Process p = pb.start();
 			
-			 BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			 System.out.println(in.readLine());
-			 //int ret = new Integer(in.readLine());
-			 //System.out.println("value is : "+ret);
+			String command = "python " + PATH + "engine.py " + photoDir + " " + currentTimeMillis;
 			
+			Process exec = Runtime.getRuntime().exec(command);
+			exec.waitFor();
+			
+			String sCurrentLine;
+
+			br = new BufferedReader(new FileReader(PATH + currentTimeMillis + ".txt"));
+
+			while ((sCurrentLine = br.readLine()) != null) {
+				System.out.println(sCurrentLine);
+			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		
+
 	}
-	
 }
